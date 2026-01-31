@@ -189,7 +189,7 @@ const Hero = () => {
               {/* Image container */}
               <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-indigo-500/30 animate-pulse-glow">
                 <img
-                  src="/IMG_SHIVA.jpg"
+                  src="IMG_SHIVA.jpg"
                   alt="Shiva Krishna"
                   className="w-full h-full object-cover"
                 />

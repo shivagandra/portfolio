@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ExternalLink, Github, Cpu, MessageSquare, BookOpen } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ExternalLink,
+  Github,
+  Cpu,
+  MessageSquare,
+  BookOpen,
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,30 +18,52 @@ const Projects = () => {
 
   const projects = [
     {
-      title: 'Federated Learning for IoT',
-      description: 'Built a Machine Learning model using Flower framework for decentralized model training, enabling secure distributed learning for IoT device predictive maintenance.',
-      image: '/project-federated-learning.jpg',
-      tech: ['Machine Learning', 'AWS Cloud', 'Flower Framework', 'Python', 'gRPC'],
+      title: "Federated Learning for IoT",
+      description:
+        "Built a Machine Learning model using Flower framework for decentralized model training, enabling secure distributed learning for IoT device predictive maintenance.",
+      image: "project-federated-learning.jpg",
+      tech: [
+        "Machine Learning",
+        "AWS Cloud",
+        "Flower Framework",
+        "Python",
+        "gRPC",
+      ],
       icon: Cpu,
-      github: 'https://github.com/shivagandra',
+      github: "https://github.com/shivagandra",
       live: null,
     },
     {
-      title: 'KL Connect Application',
-      description: 'A comprehensive cross-platform communication application for university-parent interactions with real-time messaging and secure authentication.',
-      image: '/project-kl-connect.jpg',
-      tech: ['Flutter', 'Node.js', 'SQL', 'AWS Cognito', 'WebSockets', 'REST API'],
+      title: "KL Connect Application",
+      description:
+        "A comprehensive cross-platform communication application for university-parent interactions with real-time messaging and secure authentication.",
+      image: "project-kl-connect.jpg",
+      tech: [
+        "Flutter",
+        "Node.js",
+        "SQL",
+        "AWS Cognito",
+        "WebSockets",
+        "REST API",
+      ],
       icon: MessageSquare,
-      github: 'https://github.com/shivagandra',
+      github: "https://github.com/shivagandra",
       live: null,
     },
     {
-      title: 'Library Management System',
-      description: 'An efficient library management platform with automated notifications, secure payment gateway integration, and comprehensive book catalog management.',
-      image: '/project-library.jpg',
-      tech: ['Java', 'Spring Boot', 'PostgreSQL', 'AWS Services', 'Spring Mail'],
+      title: "Library Management System",
+      description:
+        "An efficient library management platform with automated notifications, secure payment gateway integration, and comprehensive book catalog management.",
+      image: "project-library.jpg",
+      tech: [
+        "Java",
+        "Spring Boot",
+        "PostgreSQL",
+        "AWS Services",
+        "Spring Mail",
+      ],
       icon: BookOpen,
-      github: 'https://github.com/shivagandra',
+      github: "https://github.com/shivagandra",
       live: null,
     },
   ];
@@ -52,12 +80,12 @@ const Projects = () => {
           rotate: 0,
           duration: 0.8,
           stagger: 0.1,
-          ease: 'power3.out',
+          ease: "power3.out",
           scrollTrigger: {
             trigger: cardsRef.current,
-            start: 'top 80%',
+            start: "top 80%",
           },
-        }
+        },
       );
     }, sectionRef);
 
@@ -65,11 +93,7 @@ const Projects = () => {
   }, []);
 
   return (
-    <section
-      id="projects"
-      ref={sectionRef}
-      className="relative py-24 px-6"
-    >
+    <section id="projects" ref={sectionRef} className="relative py-24 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -77,7 +101,8 @@ const Projects = () => {
             Featured <span className="text-gradient">Projects</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            A showcase of my technical expertise through real-world applications and innovative solutions.
+            A showcase of my technical expertise through real-world applications
+            and innovative solutions.
           </p>
         </div>
 
@@ -85,7 +110,7 @@ const Projects = () => {
         <div
           ref={cardsRef}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          style={{ perspective: '1000px' }}
+          style={{ perspective: "1000px" }}
         >
           {projects.map((project, index) => (
             <div
@@ -94,10 +119,11 @@ const Projects = () => {
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               style={{
-                transform: hoveredIndex === index
-                  ? 'translateZ(20px) rotateX(2deg) rotateY(2deg)'
-                  : 'translateZ(0)',
-                transformStyle: 'preserve-3d',
+                transform:
+                  hoveredIndex === index
+                    ? "translateZ(20px) rotateX(2deg) rotateY(2deg)"
+                    : "translateZ(0)",
+                transformStyle: "preserve-3d",
               }}
             >
               {/* Image */}
@@ -106,11 +132,13 @@ const Projects = () => {
                   src={project.image}
                   alt={project.title}
                   className={`w-full h-full object-cover transition-all duration-500 ${
-                    hoveredIndex === index ? 'scale-110 grayscale-0' : 'grayscale-[30%]'
+                    hoveredIndex === index
+                      ? "scale-110 grayscale-0"
+                      : "grayscale-[30%]"
                   }`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent" />
-                
+
                 {/* Icon Badge */}
                 <div className="absolute top-4 left-4 w-10 h-10 rounded-lg bg-indigo-500/80 flex items-center justify-center">
                   <project.icon className="text-white" size={20} />
@@ -171,7 +199,9 @@ const Projects = () => {
               {/* Border Glow on Hover */}
               <div
                 className={`absolute inset-0 rounded-2xl border-2 border-indigo-500/0 transition-all duration-300 pointer-events-none ${
-                  hoveredIndex === index ? 'border-indigo-500/50 shadow-glow' : ''
+                  hoveredIndex === index
+                    ? "border-indigo-500/50 shadow-glow"
+                    : ""
                 }`}
               />
             </div>
