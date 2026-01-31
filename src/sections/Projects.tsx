@@ -21,7 +21,7 @@ const Projects = () => {
       title: "Federated Learning for IoT",
       description:
         "Built a Machine Learning model using Flower framework for decentralized model training, enabling secure distributed learning for IoT device predictive maintenance.",
-      image: "project-federated-learning.jpg",
+      image: "/project-federated-learning.jpg",
       tech: [
         "Machine Learning",
         "AWS Cloud",
