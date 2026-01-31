@@ -2,7 +2,7 @@
 
 A stunning, multi-page portfolio website showcasing expertise in DevOps, Cloud Computing, and Software Development.
 
-![Portfolio Preview](public/IMG_SHIVA.JPG)
+![Portfolio Preview](public/IMG_SHIVA.JPG){width=400 height=300}
 
 ## 🛠️ Tech Stack
 
