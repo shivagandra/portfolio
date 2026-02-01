@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link } from "react-router-dom";
+import { getImagePath } from "@/lib/image";
 import {
   ArrowRight,
   Cloud,
@@ -201,7 +202,7 @@ const Home = () => {
               {/* Image Container */}
               <div className="relative z-10">
                 <img
-                  src="/IMG_SHIVA.JPG"
+                  src={getImagePath("IMG_SHIVA.JPG")}
                   alt="Shiva Krishna"
                   className="w-72 h-72 md:w-96 md:h-96 rounded-full object-cover border-4 border-indigo-500/50"
                 />

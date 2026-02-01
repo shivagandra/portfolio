@@ -8,6 +8,7 @@ import {
   MessageSquare,
   BookOpen,
 } from "lucide-react";
+import { getImagePath } from "@/lib/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,7 +22,7 @@ const Projects = () => {
       title: "Federated Learning for IoT",
       description:
         "Built a Machine Learning model using Flower framework for decentralized model training, enabling secure distributed learning for IoT device predictive maintenance.",
-      image: "/project-federated-learning.jpg",
+      image: getImagePath("project-federated-learning.jpg"),
       tech: [
         "Machine Learning",
         "AWS Cloud",
@@ -37,7 +38,7 @@ const Projects = () => {
       title: "KL Connect Application",
       description:
         "A comprehensive cross-platform communication application for university-parent interactions with real-time messaging and secure authentication.",
-      image: "/project-kl-connect.jpg",
+      image: getImagePath("project-kl-connect.jpg"),
       tech: [
         "Flutter",
         "Node.js",
@@ -54,7 +55,7 @@ const Projects = () => {
       title: "Library Management System",
       description:
         "An efficient library management platform with automated notifications, secure payment gateway integration, and comprehensive book catalog management.",
-      image: "/project-library.jpg",
+      image: getImagePath("project-library.jpg"),
       tech: [
         "Java",
         "Spring Boot",
