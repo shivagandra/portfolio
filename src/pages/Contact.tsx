@@ -13,6 +13,7 @@ import {
   Calendar,
   Globe,
 } from "lucide-react";
+import { getResumePath } from "@/lib/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -261,7 +262,7 @@ const Contact = () => {
                 skills.
               </p>
               <a
-                href="/resume.pdf"
+                href={getResumePath()}
                 download="Shiva Krishna Gandra Resume.pdf"
                 className="flex items-center justify-center gap-2 w-full py-3 border border-indigo-500/50 hover:border-indigo-500 text-indigo-400 hover:text-white rounded-xl font-medium transition-colors"
               >
