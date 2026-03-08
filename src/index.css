@@ -347,3 +347,29 @@
 .cert-shine:hover::before {
   left: 100%;
 }
+
+/* Hide scrollbars while preserving horizontal scroll */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* Accessible skip link */
+.skip-link {
+  transform: translateY(-180%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+

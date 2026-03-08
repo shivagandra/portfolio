@@ -1,59 +1,60 @@
-# Shiva Krishna - DevOps & Cloud Engineer Portfolio
+# Shiva Krishna - DevOps and Cloud Engineer Portfolio
 
-A stunning, multi-page portfolio website showcasing expertise in DevOps, Cloud Computing, and Software Development.
+Multi-page portfolio website built with React, TypeScript, Tailwind CSS, and Vite.
 
-<!-- ![Portfolio Preview](public/IMG_SHIVA.JPG){width=400 height=300} -->
+## Tech Stack
+- React + TypeScript
+- Tailwind CSS
+- React Router
+- GSAP (animations)
+- Vite
 
-## 🛠️ Tech Stack
+## Prerequisites
+- Node.js 18+
+- npm 9+
 
-- **Framework:** React 18 + TypeScript
-- **Styling:** Tailwind CSS
-- **Routing:** React Router DOM
-- **Animations:** GSAP + ScrollTrigger
-- **Icons:** Lucide React
-- **Build Tool:** Vite
-
-## 📋 Prerequisites
-
-Before running this project locally, make sure you have:
-
-- **Node.js** (version 18 or higher)
-  ```bash
-  node --version
-  ```
-- **npm** (comes with Node.js) or **yarn**
-  ```bash
-  npm --version
-  ```
-
-## 🚀 Running Locally
-
-### Step 1: Clone the Repository
-
+## Local Development
 ```bash
-# Clone the repository
-git clone https://github.com/shivagandra/portfolio.git
-
-# Navigate to the project directory
-cd portfolio
-```
-
-### Step 2: Install Dependencies
-
-```bash
-# Using npm
 npm install
-
-# Or using yarn
-yarn install
-```
-
-### Step 3: Start Development Server
-
-```bash
-# Using npm
 npm run dev
-
-# Or using yarn
-yarn dev
 ```
+
+## Build
+```bash
+npm run build
+npm run preview
+```
+
+## Quality and Testing
+
+### Lighthouse CI (local)
+```bash
+npm run build
+npm run qa:lighthouse
+```
+
+### Playwright responsive UI tests
+> Windows note: if Playwright reports missing `winldd`, run:
+> `npx playwright install winldd`
+```bash
+npm run qa:ui
+npm run qa:ui:report
+```
+
+### Run full automated QA
+```bash
+npm run qa
+```
+
+## GitHub Actions
+A CI workflow runs automated quality checks on `push`/`pull_request` to `main`:
+- Lighthouse CI audit
+- Playwright responsive UI tests
+
+Workflow file:
+- `.github/workflows/quality-audit.yml`
+
+## Manual QA Checklist
+Use this browser checklist for final visual sign-off:
+- `docs/manual-qa-checklist.md`
+

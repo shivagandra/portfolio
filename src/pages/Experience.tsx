@@ -1,184 +1,223 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Building2, Calendar, MapPin, CheckCircle2 } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  Building2,
+  Calendar,
+  MapPin,
+  CheckCircle2,
+  Filter,
+  Briefcase,
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const experiences = [
+  {
+    company: "Tata Consultancy Services Limited",
+    role: "Development Analyst",
+    period: "June 2024 - Present",
+    location: "Kolkata, West Bengal",
+    type: "Full-time",
+    description:
+      "Maintaining and fine-tuning TCS Bancs software while investigating and resolving system faults using Java-centric debugging workflows.",
+    achievements: [
+      "Collaborated with cross-functional teams to resolve complex software incidents.",
+      "Engineered and optimized backend components using Java and SQL.",
+      "Improved platform stability through proactive issue identification and mitigation.",
+      "Supported high availability goals with monitoring and operational rigor.",
+    ],
+    technologies: ["Java", "Spring Boot", "SQL", "Oracle", "Git", "Jenkins"],
+  },
+  {
+    company: "Safertek Software LLC",
+    role: "DevOps Engineering Intern",
+    period: "Nov 2023 - Mar 2024",
+    location: "Hyderabad, Telangana",
+    type: "Internship",
+    description:
+      "Streamlined delivery through cloud-driven automation and repeatable release workflows.",
+    achievements: [
+      "Automated AWS infrastructure setup using CloudFormation and Lambda.",
+      "Implemented CI/CD pipelines with AWS CodePipeline and CodeBuild.",
+      "Used CloudWatch to improve operational visibility and diagnostics.",
+      "Reduced deployment cycle time by around 60% using automation.",
+    ],
+    technologies: ["AWS", "CloudFormation", "Lambda", "CodePipeline", "Shell", "Docker"],
+  },
+  {
+    company: "Samsung R&D Institute India",
+    role: "Research Intern",
+    period: "Sep 2022 - Mar 2023",
+    location: "Remote (Bangalore, India)",
+    type: "Internship",
+    description:
+      "Built machine learning models for predictive maintenance of IoT devices based on acoustic signals.",
+    achievements: [
+      "Benchmarked multiple ML algorithms and improved efficiency by ~30%.",
+      "Implemented federated learning workflows using Flower and gRPC.",
+      "Developed secure data-sharing patterns for distributed training.",
+      "Created reproducible experimentation baselines for research iterations.",
+    ],
+    technologies: ["Python", "TensorFlow", "Flower", "gRPC", "AWS", "ML"],
+  },
+];
+
 const Experience = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [activeType, setActiveType] = useState<string>("All");
 
-  const experiences = [
-    {
-      company: 'Tata Consultancy Services Limited',
-      role: 'Development Analyst',
-      period: 'June 2024 – Present',
-      location: 'Kolkata, West Bengal',
-      type: 'Full-time',
-      description: 'Supporting team in maintaining and fine-tuning TCS Bancs software, leveraging advanced Java skills to efficiently investigate, diagnose, and resolve system faults.',
-      achievements: [
-        'Collaborated in cross-functional teams to investigate and resolve complex software faults',
-        'Utilized advanced full-stack development techniques with emphasis on Java frameworks',
-        'Engineered and optimized core components using Java and SQL for scalable backend services',
-        'Proactively identified, diagnosed, and mitigated potential issues impacting user experience',
-        'Maintained 99.9% system uptime through proactive monitoring and maintenance',
-      ],
-      technologies: ['Java', 'Spring Boot', 'SQL', 'Oracle', 'Git', 'Jenkins'],
-    },
-    {
-      company: 'Safertek Software LLC',
-      role: 'DevOps Engineering Intern',
-      period: 'Nov 2023 – March 2024',
-      location: 'Hyderabad, Telangana',
-      type: 'Internship',
-      description: 'Streamlined development and deployment processes through innovative DevOps practices, leveraging cloud technologies and automation.',
-      achievements: [
-        'Designed cloud infrastructure automation using AWS services (EC2, CloudFormation, Lambda)',
-        'Developed automation scripts using Shell for systematic project development',
-        'Implemented CI/CD pipelines using AWS CodePipeline and CodeBuild',
-        'Utilized AWS CloudWatch for monitoring and logging application performance',
-        'Reduced deployment time by 60% through automation implementation',
-      ],
-      technologies: ['AWS', 'CloudFormation', 'Lambda', 'CodePipeline', 'Shell', 'Docker'],
-    },
-    {
-      company: 'Samsung R&D Institute India',
-      role: 'Research Intern',
-      period: 'Sept 2022 – Mar 2023',
-      location: 'Remote (Bangalore, India)',
-      type: 'Internship',
-      description: 'Built a Machine Learning model for predictive maintenance of IoT Devices based on noise produced.',
-      achievements: [
-        'Designed experiments comparing ML algorithms, improving efficiency by 30%',
-        'Implemented Federated Machine Learning frameworks like Flower using gRPC',
-        'Developed secure data transfer protocols for distributed learning',
-        'Optimized predictive maintenance model for IoT devices',
-        'Published research findings in internal Samsung technical review',
-      ],
-      technologies: ['Python', 'TensorFlow', 'Flower', 'gRPC', 'AWS', 'ML'],
-    },
-  ];
+  const types = useMemo(
+    () => ["All", ...new Set(experiences.map((experience) => experience.type))],
+    [],
+  );
+
+  const filteredExperiences = useMemo(
+    () =>
+      experiences.filter((experience) =>
+        activeType === "All" ? true : experience.type === activeType,
+      ),
+    [activeType],
+  );
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.experience-card',
-        { opacity: 0, y: 40 },
+      gsap.fromTo(
+        ".experience-card",
+        { opacity: 0, y: 36 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-          }
-        }
+          duration: 0.7,
+          stagger: 0.12,
+          ease: "power3.out",
+        },
       );
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [filteredExperiences]);
 
   return (
     <div ref={sectionRef} className="py-20 px-6">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h1 className="font-exo font-bold text-4xl md:text-5xl text-white mb-4">
             Work <span className="text-gradient">Experience</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            My professional journey through impactful roles in software development, 
-            cloud engineering, and research.
+            End-to-end experience spanning production engineering, cloud delivery
+            automation, and applied research.
           </p>
         </div>
 
-        {/* Experience Timeline */}
-        <div className="relative">
-          {/* Timeline Line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 timeline-line transform md:-translate-x-1/2" />
-
-          {/* Experience Cards */}
-          <div className="space-y-12">
-            {experiences.map((exp, index) => (
-              <div
-                key={index}
-                className={`experience-card relative flex flex-col md:flex-row ${
-                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                } items-start md:items-center gap-8 opacity-0`}
-              >
-                {/* Timeline Dot */}
-                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-indigo-500 border-4 border-void z-10">
-                  <div className="absolute inset-0 rounded-full bg-indigo-400 animate-ping opacity-50" />
-                </div>
-
-                {/* Card */}
-                <div
-                  className={`ml-12 md:ml-0 md:w-[48%] ${
-                    index % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto'
+        <div className="glass rounded-2xl p-5 mb-8 border border-white/5">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="text-sm text-gray-400">
+              Showing {filteredExperiences.length} of {experiences.length} roles
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs uppercase tracking-wide text-gray-500 inline-flex items-center gap-1">
+                <Filter size={12} />
+                Type
+              </span>
+              {types.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setActiveType(type)}
+                  className={`px-3 py-2 text-xs rounded-lg border transition-all ${
+                    activeType === type
+                      ? "bg-indigo-500/20 border-indigo-500/40 text-indigo-200"
+                      : "bg-white/5 border-white/10 text-gray-300 hover:text-white"
                   }`}
                 >
-                  <div className="glass rounded-2xl p-6 md:p-8 group hover:border-indigo-500/30 transition-all duration-300">
-                    {/* Header */}
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 timeline-line transform md:-translate-x-1/2" />
+          <div className="space-y-12">
+            {filteredExperiences.map((experience, index) => (
+              <div
+                key={experience.role + experience.company}
+                className={`experience-card relative flex flex-col md:flex-row ${
+                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                } items-start md:items-center gap-8 opacity-0`}
+              >
+                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-indigo-500 border-4 border-void z-10">
+                  <div className="absolute inset-0 rounded-full bg-indigo-400 animate-ping opacity-40" />
+                </div>
+
+                <div
+                  className={`ml-12 md:ml-0 md:w-[48%] ${
+                    index % 2 === 0 ? "md:mr-auto" : "md:ml-auto"
+                  }`}
+                >
+                  <article className="glass rounded-2xl p-6 md:p-8 group hover:border-indigo-500/30 transition-all duration-300 border border-white/5">
                     <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                       <div>
-                        <h3 className="font-exo font-bold text-xl text-white group-hover:text-indigo-400 transition-colors">
-                          {exp.role}
-                        </h3>
+                        <h2 className="font-exo font-bold text-xl text-white group-hover:text-indigo-400 transition-colors">
+                          {experience.role}
+                        </h2>
                         <div className="flex items-center gap-2 text-gray-400 mt-1">
                           <Building2 size={16} />
-                          <span>{exp.company}</span>
+                          <span>{experience.company}</span>
                         </div>
                       </div>
-                      <span className="px-3 py-1 text-xs bg-indigo-500/10 text-indigo-300 rounded-full">
-                        {exp.type}
+                      <span className="px-3 py-1 text-xs bg-indigo-500/10 text-indigo-300 rounded-full inline-flex items-center gap-1">
+                        <Briefcase size={12} />
+                        {experience.type}
                       </span>
                     </div>
 
-                    {/* Meta */}
                     <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
                       <span className="flex items-center gap-1">
                         <Calendar size={14} />
-                        {exp.period}
+                        {experience.period}
                       </span>
                       <span className="flex items-center gap-1">
                         <MapPin size={14} />
-                        {exp.location}
+                        {experience.location}
                       </span>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-gray-400 mb-4">{exp.description}</p>
+                    <p className="text-gray-400 mb-4">{experience.description}</p>
 
-                    {/* Achievements */}
                     <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-white mb-2">Key Achievements</h4>
+                      <h3 className="text-sm font-semibold text-white mb-2">
+                        Key Achievements
+                      </h3>
                       <ul className="space-y-2">
-                        {exp.achievements.map((achievement, i) => (
+                        {experience.achievements.map((achievement) => (
                           <li
-                            key={i}
+                            key={achievement}
                             className="flex items-start gap-2 text-sm text-gray-300"
                           >
-                            <CheckCircle2 size={16} className="text-indigo-400 mt-0.5 flex-shrink-0" />
+                            <CheckCircle2
+                              size={16}
+                              className="text-indigo-400 mt-0.5 flex-shrink-0"
+                            />
                             <span>{achievement}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    {/* Technologies */}
                     <div className="flex flex-wrap gap-2">
-                      {exp.technologies.map((tech, i) => (
+                      {experience.technologies.map((tech) => (
                         <span
-                          key={i}
+                          key={tech}
                           className="px-2 py-1 text-xs bg-white/5 text-gray-400 rounded-md"
                         >
                           {tech}
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </article>
                 </div>
               </div>
             ))}

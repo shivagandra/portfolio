@@ -1,99 +1,114 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
+import { ArrowRight, CheckCircle2, Server, Zap } from "lucide-react";
 import { getImagePath } from "@/lib/image";
 import {
-  ArrowRight,
-  Cloud,
-  Server,
-  Container,
-  GitBranch,
-  Shield,
-  Database,
-  Zap,
-  Globe,
-} from "lucide-react";
+  currentFocus,
+  homeServices,
+  homeStats,
+  impactHighlights,
+  roleRotation,
+  stackPillars,
+  type HomeStat,
+} from "@/data/portfolioData";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const formatStatValue = (stat: HomeStat, value: number) =>
+  `${stat.prefix ?? ""}${Math.round(value)}${stat.suffix ?? ""}`;
+
+const AnimatedStat = ({ stat, start }: { stat: HomeStat; start: boolean }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!start) return;
+    let frameId = 0;
+    const duration = 1100;
+    const startTime = performance.now();
+
+    const update = (time: number) => {
+      const progress = Math.min((time - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(stat.value * eased);
+      if (progress < 1) {
+        frameId = requestAnimationFrame(update);
+      }
+    };
+
+    frameId = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(frameId);
+  }, [start, stat.value]);
+
+  return (
+    <div className="stat-item glass rounded-2xl p-6 text-center opacity-0">
+      <div className="font-exo font-bold text-4xl md:text-5xl text-indigo-400 mb-2">
+        {formatStatValue(stat, count)}
+      </div>
+      <div className="text-gray-400 text-sm">{stat.label}</div>
+    </div>
+  );
+};
 
 const Home = () => {
-  const heroRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [countStart, setCountStart] = useState(false);
 
-  const stats = [
-    { value: "2+", label: "Years Experience" },
-    { value: "5", label: "AWS Certifications" },
-    { value: "5+", label: "Projects Deployed" },
-    //{ value: "99.9%", label: "Uptime Achieved" },
-  ];
+  const rotatingRole = useMemo(
+    () => roleRotation[roleIndex % roleRotation.length],
+    [roleIndex],
+  );
 
-  const services = [
-    {
-      icon: Cloud,
-      title: "Cloud Architecture",
-      description:
-        "Designing scalable, cost-effective cloud solutions on AWS with Infrastructure as Code.",
-    },
-    {
-      icon: Container,
-      title: "Container Orchestration",
-      description:
-        "Deploying and managing containerized applications with Docker and Kubernetes.",
-    },
-    {
-      icon: GitBranch,
-      title: "CI/CD Pipelines",
-      description:
-        "Automating build, test, and deployment processes for faster delivery cycles.",
-    },
-    {
-      icon: Shield,
-      title: "DevSecOps",
-      description:
-        "Integrating security practices into the DevOps pipeline for secure deployments.",
-    },
-    {
-      icon: Database,
-      title: "Database Management",
-      description:
-        "Managing SQL and NoSQL databases with backup, replication, and optimization.",
-    },
-    {
-      icon: Server,
-      title: "Infrastructure Automation",
-      description:
-        "Automating infrastructure provisioning with Terraform and CloudFormation.",
-    },
-  ];
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setRoleIndex((previous) => (previous + 1) % roleRotation.length);
+    }, 2200);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!statsRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCountStart(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(statsRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero animations
       gsap.fromTo(
-        ".hero-title",
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 },
-      );
-      gsap.fromTo(
-        ".hero-subtitle",
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.5 },
-      );
-      gsap.fromTo(
-        ".hero-cta",
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", delay: 0.8 },
+        ".hero-fade",
+        { opacity: 0, y: 32 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: 0.12,
+          ease: "power3.out",
+        },
       );
 
-      // Stats animation
       gsap.fromTo(
         ".stat-item",
-        { opacity: 0, scale: 0.8 },
+        { opacity: 0, scale: 0.82 },
         {
           opacity: 1,
           scale: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "back.out(1.7)",
+          duration: 0.58,
+          stagger: 0.08,
+          ease: "back.out(1.6)",
           scrollTrigger: {
             trigger: statsRef.current,
             start: "top 85%",
@@ -101,57 +116,56 @@ const Home = () => {
         },
       );
 
-      // Services animation
       gsap.fromTo(
         ".service-card",
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 26 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
-          stagger: 0.1,
+          duration: 0.55,
+          stagger: 0.08,
           ease: "power3.out",
           scrollTrigger: {
             trigger: servicesRef.current,
-            start: "top 80%",
+            start: "top 82%",
           },
         },
       );
-    }, heroRef);
+    }, pageRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={heroRef}>
-      {/* Hero Section */}
+    <div ref={pageRef}>
       <section className="relative min-h-[90vh] flex items-center justify-center px-6">
         <div className="max-w-6xl mx-auto w-full">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div className="text-left md:text-left order-2 md:order-1">
-              {/* Badge */}
-              <div className="hero-title inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+            <div className="text-left order-2 md:order-1">
+              <div className="hero-fade inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
                 <Zap className="text-yellow-400" size={16} />
                 <span className="text-sm text-gray-300">
                   AWS Certified DevOps Engineer - Professional
                 </span>
               </div>
 
-              {/* Main Title */}
-              <h1 className="hero-title font-exo font-bold text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-relaxed">
-                DevOps &<br />
+              <h1 className="hero-fade font-exo font-bold text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-relaxed">
+                DevOps &
+                <br />
                 <span className="text-gradient">Cloud Engineer</span>
               </h1>
 
-              {/* Subtitle */}
-              <p className="hero-subtitle text-xl md:text-2xl text-gray-400 mb-8 max-w-xl leading-relaxed">
-                Building scalable infrastructure, automating deployments, and
-                optimizing cloud solutions for modern applications.
+              <div className="hero-fade mb-3 h-14 md:h-12 overflow-hidden">
+                <p className="text-xl md:text-2xl text-gray-400 max-w-xl leading-relaxed">
+                  {rotatingRole}
+                </p>
+              </div>
+              <p className="hero-fade text-base md:text-lg text-gray-400 mb-8 max-w-xl">
+                Building scalable infrastructure, automated deployments, and
+                reliable cloud platforms for modern engineering teams.
               </p>
 
-              {/* CTA Buttons */}
-              <div className="hero-cta flex flex-wrap gap-4 mb-12">
+              <div className="hero-fade flex flex-wrap gap-4 mb-10">
                 <Link
                   to="/projects"
                   onClick={() =>
@@ -169,41 +183,29 @@ const Home = () => {
                   }
                   className="btn-magnetic px-8 py-4 border border-indigo-500/50 hover:border-indigo-500 text-white rounded-full font-medium"
                 >
-                  Get In Touch
+                  Start Collaboration
                 </Link>
               </div>
 
-              {/* Tech Stack Preview */}
-              <div className="hero-cta flex flex-wrap gap-4">
-                {[
-                  "AWS",
-                  "Kubernetes",
-                  "Docker",
-                  "Terraform",
-                  "Jenkins",
-                  "Python",
-                ].map((tech) => (
+              <div className="hero-fade flex flex-wrap gap-3">
+                {stackPillars.map((pillar) => (
                   <span
-                    key={tech}
-                    className="px-4 py-2 glass rounded-lg text-sm text-gray-400 flex items-center gap-2"
+                    key={pillar.label}
+                    className="px-4 py-2 glass rounded-lg text-sm text-gray-300 flex items-center gap-2"
                   >
-                    <Server size={14} className="text-indigo-400" />
-                    {tech}
+                    <pillar.icon size={14} className="text-indigo-400" />
+                    {pillar.label}
                   </span>
                 ))}
               </div>
             </div>
 
-            {/* Right Image */}
             <div className="relative order-1 md:order-2 flex justify-center md:justify-end">
-              {/* Glow effect */}
               <div className="absolute inset-0 bg-indigo-500/30 rounded-full blur-3xl animate-pulse-glow" />
-
-              {/* Image Container */}
               <div className="relative z-10">
                 <img
                   src={getImagePath("IMG_SHIVA.JPG")}
-                  alt="Shiva Krishna"
+                  alt="Shiva Krishna portrait" width={384} height={384}
                   className="w-72 h-72 md:w-96 md:h-96 rounded-full object-cover border-4 border-indigo-500/50"
                 />
               </div>
@@ -212,42 +214,57 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
       <section ref={statsRef} className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {stats.map((stat, index) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {homeStats.map((stat) => (
+              <AnimatedStat key={stat.label} stat={stat} start={countStart} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-8 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-exo font-bold text-3xl text-white mb-8 text-center">
+            Delivery <span className="text-gradient">Impact</span>
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {impactHighlights.map((item) => (
               <div
-                key={index}
-                className="stat-item glass rounded-2xl p-6 text-center opacity-0"
+                key={item.title}
+                className="glass rounded-2xl p-5 border border-white/5"
               >
-                <div className="font-exo font-bold text-4xl md:text-5xl text-indigo-400 mb-2">
-                  {stat.value}
+                <div className="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-3">
+                  <item.icon size={20} />
                 </div>
-                <div className="text-gray-400 text-sm">{stat.label}</div>
+                <p className="text-white font-semibold">{item.title}</p>
+                <p className="text-indigo-300 text-lg font-exo font-bold mb-2">
+                  {item.value}
+                </p>
+                <p className="text-gray-400 text-sm">{item.detail}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
       <section ref={servicesRef} className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-14">
             <h2 className="font-exo font-bold text-4xl md:text-5xl text-white mb-4">
-              What I <span className="text-gradient">Love To Do</span>
+              Core <span className="text-gradient">Capabilities</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Comprehensive DevOps and cloud services to streamline your
-              development workflow and infrastructure management.
+              End-to-end ownership from infrastructure design to delivery
+              automation and production reliability.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
+            {homeServices.map((service) => (
               <div
-                key={index}
+                key={service.title}
                 className="service-card glass rounded-2xl p-6 group hover:border-indigo-500/30 transition-all duration-300 opacity-0"
               >
                 <div className="w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4 group-hover:bg-indigo-500/30 transition-colors">
@@ -263,23 +280,33 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="glass rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
-            {/* Background decoration */}
+          <div className="glass rounded-3xl p-8 md:p-12 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 
             <div className="relative z-10">
-              <Globe className="mx-auto text-indigo-400 mb-6" size={48} />
-              <h2 className="font-exo font-bold text-3xl md:text-4xl text-white mb-4">
-                Ready to Scale Your Infrastructure?
+              <div className="flex items-center gap-2 mb-6 text-indigo-300">
+                <Server size={20} />
+                <span className="text-sm uppercase tracking-wider">
+                  Current Focus
+                </span>
+              </div>
+              <h2 className="font-exo font-bold text-3xl md:text-4xl text-white mb-6">
+                Building production-ready platforms with clarity and speed.
               </h2>
-              <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-                Let's discuss how I can help you build robust, scalable, and
-                secure cloud infrastructure for your applications.
-              </p>
+              <div className="grid sm:grid-cols-2 gap-3 mb-8">
+                {currentFocus.map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-center gap-2 text-sm text-gray-300"
+                  >
+                    <CheckCircle2 size={16} className="text-indigo-400" />
+                    {item}
+                  </div>
+                ))}
+              </div>
               <Link
                 to="/contact"
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -297,3 +324,5 @@ const Home = () => {
 };
 
 export default Home;
+
+

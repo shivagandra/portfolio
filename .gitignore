@@ -43,3 +43,9 @@ Thumbs.db
 # Logs
 logs/
 *.log
+
+# QA artifacts
+playwright-report/
+test-results/
+.lighthouseci/
+
